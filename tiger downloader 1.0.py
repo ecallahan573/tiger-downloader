@@ -10,8 +10,9 @@ version 0.3 -  Changed time of arcpy import for faster initial load. Improved er
                Can now select multiple counties.
 version 0.4 -  Corrected error where a space in the state or county name would cause feature classes to not be created.
 version 1.0 -  Upgraded to PyQt5
-
+version 1.1 - Fix inconsistent FTP downloads
 """
+
 import sys, os, shutil, numpy as np
 from PyQt5 import QtWidgets, QtGui
 
