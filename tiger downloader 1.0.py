@@ -30,7 +30,8 @@ class Tigerdownloader(QtWidgets.QMainWindow, tiger_downloader.Ui_tiger_downloade
         super(Tigerdownloader, self).__init__(parent)
         self.setupUi(self)
         self.download_dir = os.path.join(root, "data", "download")
-        self.folders = ['UNSD','BG','AREALM', 'AREAWATER','ELSD','LINEARWATER','PLACE','PLACEEC','POINTLM','ROADS','SCSD']
+        #self.folders = ['UNSD','BG','AREALM', 'AREAWATER','ELSD','LINEARWATER','PLACE','POINTLM','ROADS','SCSD','FEATNAMES']
+        self.folders = ['LINEARWATER']
         self.statebox.addItems(sorted(states.values()))
         self.statebutton.clicked.connect(self.list_counties)
         self.downloadbutton.clicked.connect(self.download_click)
@@ -51,9 +52,11 @@ class Tigerdownloader(QtWidgets.QMainWindow, tiger_downloader.Ui_tiger_downloade
             self.listWidget.addItem(county[1])
 
     def get(self, statefp, countyfp):
+        print("Line 53")
         self.d = download(self.year)
-
+        print("Line 55")
         if os.path.isdir(self.download_dir) == True:
+            print("Deleting folders")
             shutil.rmtree(self.download_dir)
             os.mkdir(self.download_dir)
         else:
@@ -87,7 +90,7 @@ class Tigerdownloader(QtWidgets.QMainWindow, tiger_downloader.Ui_tiger_downloade
         p.createdb(self.dbtype, self.statename, self.countyname)
         self.feedback.setText("Select State/County")
         self.d.cnxn.close()
-        shutil.rmtree(os.path.join(root, "data", "download"))
+        shutil.rmtree(self.download_dir)
     
     def download_click(self):
         self.database = self.database_name.text()
@@ -110,12 +113,15 @@ class Tigerdownloader(QtWidgets.QMainWindow, tiger_downloader.Ui_tiger_downloade
                 
                 self.year = str(self.yearbox.currentText())
                 
-                try:
-                    self.get(self.statefp, self.countyfp)
-                    self.etl()
-                except:
-                    self.feedback.setText("Download Failed")
-                    QtWidgets.QApplication.processEvents()
+                #try:
+                print("Getting Data")
+                self.get(self.statefp, self.countyfp)
+                self.etl()
+#                except:
+#                    raise
+#                    self.feedback.setText("Download Failed")
+#                    QtWidgets.QApplication.processEvents()
+            exit()
                 
 def main():
     app = QtWidgets.QApplication(sys.argv)

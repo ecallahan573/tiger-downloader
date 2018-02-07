@@ -10,7 +10,17 @@ import os, zipfile
 class download():
     
     def __init__(self, year):
-        self.cnxn = FTP('ftp.census.gov', 'anonymous')
+        success = False
+
+        while success != True:
+            try:
+                self.cnxn = FTP(host='ftp2.census.gov', user='anonymous', timeout=5)
+                success = True
+                print("Connected")
+            except:
+                print("Connection failed retrying")
+                success = False
+                
         self.froot = '/geo/tiger/TIGER%s/'%year
         self.cnxn.cwd(self.froot)
         
@@ -23,7 +33,8 @@ class download():
         folder = os.path.join(path,'data','download')
         local_filename = os.path.join(folder, dfile)
         save = open(local_filename, 'wb')
-        self.cnxn.retrbinary('RETR ' + dfile, save.write)
+        response = self.cnxn.retrbinary('RETR ' + dfile, save.write)
+        print response
         save.close()
         
 class process():
@@ -45,18 +56,14 @@ class process():
     
     def createdb(self,dbtype, statename, countyname):
         import arcpy
-        dbase_name = self.database_name
-        print statename, countyname
         
         try:
             if dbtype == 'File Geodatabase':
                 arcpy.CreateFileGDB_management(self.directory,str(self.database_name))
             elif dbtype == 'Personal Geodatabase':
-                print dbase_name
-                print self.directory
                 arcpy.CreatePersonalGDB_management(self.directory,str(self.database_name))
         except:
-            print "database exists?"
+            pass
         
         def import_shapes():
             path = os.path.join(self.directory, 'data', 'download')
@@ -73,6 +80,7 @@ class process():
                 try:
                     arcpy.FeatureClassToFeatureClass_conversion(shapefile, os.path.join(self.directory,str(self.database_name) + ext), statename.replace(" ", "_") + '_' + countyname.replace(" ", "_") + '_' + feature[feature.rfind('_')+1:-4])
                 except:
+                    raise
                     print "feature exists?"
                     
         import_shapes()
