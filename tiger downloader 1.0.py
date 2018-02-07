@@ -30,8 +30,7 @@ class Tigerdownloader(QtWidgets.QMainWindow, tiger_downloader.Ui_tiger_downloade
         super(Tigerdownloader, self).__init__(parent)
         self.setupUi(self)
         self.download_dir = os.path.join(root, "data", "download")
-        #self.folders = ['UNSD','BG','AREALM', 'AREAWATER','ELSD','LINEARWATER','PLACE','POINTLM','ROADS','SCSD','FEATNAMES']
-        self.folders = ['LINEARWATER']
+        self.folders = ['UNSD','BG','AREALM', 'AREAWATER','ELSD','LINEARWATER','PLACE','POINTLM','ROADS','SCSD','FEATNAMES']
         self.statebox.addItems(sorted(states.values()))
         self.statebutton.clicked.connect(self.list_counties)
         self.downloadbutton.clicked.connect(self.download_click)
