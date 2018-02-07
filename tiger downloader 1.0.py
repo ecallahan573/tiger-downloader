@@ -117,8 +117,6 @@ class Tigerdownloader(QtWidgets.QMainWindow, tiger_downloader.Ui_tiger_downloade
                 print("Getting Data")
                 self.get(self.statefp, self.countyfp)
                 self.etl()
-#                except:
-#                    raise
 
             exit()
                 
