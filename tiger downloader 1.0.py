@@ -14,7 +14,7 @@ version 1.1 - Fix inconsistent FTP downloads
 """
 
 import sys, os, shutil, numpy as np
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets
 
 root = os.getcwd()
 
@@ -52,9 +52,9 @@ class Tigerdownloader(QtWidgets.QMainWindow, tiger_downloader.Ui_tiger_downloade
             self.listWidget.addItem(county[1])
 
     def get(self, statefp, countyfp):
-        print("Line 53")
+
         self.d = download(self.year)
-        print("Line 55")
+
         if os.path.isdir(self.download_dir) == True:
             print("Deleting folders")
             shutil.rmtree(self.download_dir)
@@ -113,14 +113,14 @@ class Tigerdownloader(QtWidgets.QMainWindow, tiger_downloader.Ui_tiger_downloade
                 
                 self.year = str(self.yearbox.currentText())
                 
-                #try:
+                self.feedback.setText("Connecting...")
+                QtWidgets.QApplication.processEvents()
                 print("Getting Data")
                 self.get(self.statefp, self.countyfp)
                 self.etl()
 #                except:
 #                    raise
-#                    self.feedback.setText("Download Failed")
-#                    QtWidgets.QApplication.processEvents()
+
             exit()
                 
 def main():

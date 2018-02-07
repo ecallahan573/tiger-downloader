@@ -14,7 +14,7 @@ class download():
 
         while success != True:
             try:
-                self.cnxn = FTP(host='ftp2.census.gov', user='anonymous', timeout=5)
+                self.cnxn = FTP(host='ftp2.census.gov', user='anonymous', passwd='anonymous', timeout=1)
                 success = True
                 print("Connected")
             except:
@@ -80,7 +80,6 @@ class process():
                 try:
                     arcpy.FeatureClassToFeatureClass_conversion(shapefile, os.path.join(self.directory,str(self.database_name) + ext), statename.replace(" ", "_") + '_' + countyname.replace(" ", "_") + '_' + feature[feature.rfind('_')+1:-4])
                 except:
-                    raise
                     print "feature exists?"
                     
         import_shapes()
