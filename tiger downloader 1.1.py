@@ -10,10 +10,11 @@ version 0.3 -  Changed time of arcpy import for faster initial load. Improved er
                Can now select multiple counties.
 version 0.4 -  Corrected error where a space in the state or county name would cause feature classes to not be created.
 version 1.0 -  Upgraded to PyQt5
-
+version 1.1 - Fix inconsistent FTP downloads
 """
+
 import sys, os, shutil, numpy as np
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets
 
 root = os.getcwd()
 
@@ -29,7 +30,7 @@ class Tigerdownloader(QtWidgets.QMainWindow, tiger_downloader.Ui_tiger_downloade
         super(Tigerdownloader, self).__init__(parent)
         self.setupUi(self)
         self.download_dir = os.path.join(root, "data", "download")
-        self.folders = ['UNSD','BG','AREALM', 'AREAWATER','ELSD','LINEARWATER','PLACE','PLACEEC','POINTLM','ROADS','SCSD']
+        self.folders = ['UNSD','BG','AREALM', 'AREAWATER','ELSD','LINEARWATER','PLACE','POINTLM','ROADS','SCSD','FEATNAMES']
         self.statebox.addItems(sorted(states.values()))
         self.statebutton.clicked.connect(self.list_counties)
         self.downloadbutton.clicked.connect(self.download_click)
@@ -50,9 +51,11 @@ class Tigerdownloader(QtWidgets.QMainWindow, tiger_downloader.Ui_tiger_downloade
             self.listWidget.addItem(county[1])
 
     def get(self, statefp, countyfp):
+
         self.d = download(self.year)
 
         if os.path.isdir(self.download_dir) == True:
+            print("Deleting folders")
             shutil.rmtree(self.download_dir)
             os.mkdir(self.download_dir)
         else:
@@ -86,7 +89,7 @@ class Tigerdownloader(QtWidgets.QMainWindow, tiger_downloader.Ui_tiger_downloade
         p.createdb(self.dbtype, self.statename, self.countyname)
         self.feedback.setText("Select State/County")
         self.d.cnxn.close()
-        shutil.rmtree(os.path.join(root, "data", "download"))
+        shutil.rmtree(self.download_dir)
     
     def download_click(self):
         self.database = self.database_name.text()
@@ -109,12 +112,13 @@ class Tigerdownloader(QtWidgets.QMainWindow, tiger_downloader.Ui_tiger_downloade
                 
                 self.year = str(self.yearbox.currentText())
                 
-                try:
-                    self.get(self.statefp, self.countyfp)
-                    self.etl()
-                except:
-                    self.feedback.setText("Download Failed")
-                    QtWidgets.QApplication.processEvents()
+                self.feedback.setText("Connecting...")
+                QtWidgets.QApplication.processEvents()
+                print("Getting Data")
+                self.get(self.statefp, self.countyfp)
+                self.etl()
+
+            exit()
                 
 def main():
     app = QtWidgets.QApplication(sys.argv)
