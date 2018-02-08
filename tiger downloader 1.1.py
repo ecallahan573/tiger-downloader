@@ -5,7 +5,7 @@ Created on Mon Nov 09 13:27:15 2015
 @author: ecallahan
 
 version 0.2a - Added feature to rename database feature classes to match downloaded state/county.  
-               Added label to provide feedback on what the script is doing.
+               Added label to provide feedback on task that script is performing.
 version 0.3 -  Changed time of arcpy import for faster initial load. Improved error handling.
                Can now select multiple counties.
 version 0.4 -  Corrected error where a space in the state or county name would cause feature classes to not be created.
